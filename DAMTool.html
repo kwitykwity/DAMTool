@@ -1,0 +1,353 @@
+<!doctype html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kwitykwity DAM</title>
+  <style>
+    :root {
+      --bg1: #0b0820;
+      --bg2: #1a0f3a;
+      --card: rgba(255,255,255,0.08);
+      --cardBorder: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --accent1: #b36cff;
+      --accent2: #5bbcff;
+      --blue: #4a90e2;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(179,108,255,0.30), transparent 60%),
+                  radial-gradient(1000px 600px at 80% 20%, rgba(91,188,255,0.22), transparent 55%),
+                  linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container { max-width: 1400px; margin: 0 auto; }
+
+    .header {
+      background: var(--card);
+      border: 1px solid var(--cardBorder);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 32px;
+      backdrop-filter: blur(10px);
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle { margin: 0 0 24px 0; color: var(--muted); font-size: 14px; }
+
+    .search-section { display: flex; gap: 12px; align-items: center; }
+
+    .search-box {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--cardBorder);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent1);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .search-btn, .sync-btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .search-btn {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: #0b0820;
+    }
+
+    .search-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+    .sync-btn {
+      background: rgba(255,255,255,0.1);
+      color: var(--text);
+      border: 1px solid var(--cardBorder);
+    }
+
+    .sync-btn:hover { background: rgba(255,255,255,0.15); }
+    .sync-btn:disabled, .search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .status {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .status.show { display: block; }
+    .status.info { background: rgba(74, 144, 226, 0.2); border: 1px solid rgba(74, 144, 226, 0.4); }
+    .status.success { background: rgba(76, 175, 80, 0.2); border: 1px solid rgba(76, 175, 80, 0.4); }
+    .status.error { background: rgba(244, 67, 54, 0.2); border: 1px solid rgba(244, 67, 54, 0.4); }
+
+    .results-section { margin-top: 24px; }
+    .results-count { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 36px;
+      padding: 20px;
+      background: var(--card);
+      border: 1px solid var(--cardBorder);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      min-height: 200px;
+    }
+
+    .thumbnail-wrapper {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .thumbnail-wrapper:hover { transform: translateY(-4px); }
+
+    .thumbnail {
+      width: 216px;
+      height: 216px;
+      border: 16px solid var(--blue);
+      border-radius: 16px;
+      object-fit: cover;
+      display: block;
+      background: #1a1a2e;
+    }
+
+    .thumbnail-info {
+      position: absolute;
+      bottom: -30px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 4px;
+    }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+
+    .loading { text-align: center; padding: 40px; color: var(--muted); }
+
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-top-color: var(--accent1);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .thumbnail-wrapper::after {
+      content: '⬇ Download';
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(74, 144, 226, 0.95);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .thumbnail-wrapper:hover::after { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎨 Kwitykwity DAM</h1>
+      <p class="subtitle">Search your assets by AI-generated tags</p>
+      
+      <div class="search-section">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-box" 
+          placeholder="Search by tag (e.g., butterfly, purple, logo)..."
+        >
+        <button class="search-btn" id="searchBtn">🔍 Search</button>
+        <button class="sync-btn" id="syncBtn">🔄 Sync</button>
+      </div>
+
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="results-section">
+      <div class="results-count" id="resultsCount"></div>
+      
+      <div class="gallery" id="gallery">
+        <div class="empty-state">
+          <div class="empty-state-icon">🖼️</div>
+          <div>No search yet - Enter a tag above</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allAssets = [];
+    const baseUrl = '';
+
+    window.onload = function() {
+      loadAssets();
+      document.getElementById('searchBtn').addEventListener('click', searchAssets);
+      document.getElementById('syncBtn').addEventListener('click', syncAssets);
+      document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') searchAssets();
+      });
+    };
+
+    function showStatus(message, type) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = 'status show ' + type;
+      setTimeout(function() { status.classList.remove('show'); }, 5000);
+    }
+
+    async function loadAssets() {
+      showStatus('Loading assets...', 'info');
+      console.log('Fetching from:', baseUrl + '?action=get_assets');
+      
+      try {
+        const response = await fetch(baseUrl + '?action=get_assets', {
+          method: 'GET',
+          cache: 'no-cache'
+        });
+        
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers.get('content-type'));
+        
+        const text = await response.text();
+        console.log('Response preview:', text.substring(0, 100));
+        
+        allAssets = JSON.parse(text);
+        console.log('Loaded', allAssets.length, 'assets');
+        
+        showStatus('Loaded ' + allAssets.length + ' assets', 'success');
+      } catch (error) {
+        console.error('Load error:', error);
+        showStatus('Error: ' + error.message, 'error');
+      }
+    }
+
+    async function syncAssets() {
+  const btn = document.getElementById('syncBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Syncing...';
+  showStatus('Syncing with Google Drive...', 'info');
+
+  try {
+    const response = await fetch(baseUrl + '?action=sync', {
+      method: 'GET',
+      cache: 'no-cache'
+    });
+    
+    const result = await response.json();
+    
+    btn.disabled = false;
+    btn.textContent = '🔄 Sync';
+    
+    if (result.success) {
+      showStatus('Synced! Found ' + result.count + ' assets', 'success');
+      loadAssets(); // Reload the assets after sync
+    } else {
+      showStatus('Sync error: ' + (result.error || 'Unknown error'), 'error');
+    }
+  } catch (error) {
+    btn.disabled = false;
+    btn.textContent = '🔄 Sync';
+    showStatus('Error: ' + error.message, 'error');
+    console.error('Sync error:', error);
+  }
+}
+
+
+    function searchAssets() {
+      const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+      const gallery = document.getElementById('gallery');
+      const resultsCount = document.getElementById('resultsCount');
+
+      if (!searchTerm) {
+        gallery.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🖼️</div><div>Enter a tag to search</div></div>';
+        resultsCount.textContent = '';
+        return;
+      }
+
+      gallery.innerHTML = '<div class="loading"><div class="spinner"></div><p>Searching...</p></div>';
+
+      setTimeout(function() {
+        const results = allAssets.filter(function(asset) {
+          if (!asset.tags) return false;
+          return asset.tags.toLowerCase().includes(searchTerm);
+        });
+
+        if (results.length === 0) {
+          gallery.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><div>No results for "' + searchTerm + '"</div></div>';
+          resultsCount.textContent = '';
+        } else {
+          gallery.innerHTML = results.map(function(asset) {
+            return createThumbnail(asset);
+          }).join('');
+          resultsCount.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '') + ' for "' + searchTerm + '"';
+        }
+      }, 300);
+    }
+
+    function createThumbnail(asset) {
+      const thumbnailUrl = 'https://drive.google.com/thumbnail?id=' + asset.fileId + '&sz=w200';
+      const downloadUrl = 'https://drive.google.com/uc?export=download&id=' + asset.fileId;
+      const safeName = asset.name.replace(/'/g, "\\'");
+      
+      return '<div class="thumbnail-wrapper" onclick="window.open(\'' + downloadUrl + '\', \'_blank\')"><img src="' + thumbnailUrl + '" class="thumbnail" alt="' + safeName + '"><div class="thumbnail-info">' + asset.name + '</div></div>';
+    }
+  </script>
+</body>
+</html>
