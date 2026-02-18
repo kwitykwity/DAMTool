@@ -1,211 +1,316 @@
-# 🚀 Quick Start Guide - Deploy Your Own DAM Tool
+# ⚡ Quick Start Guide
 
-This guide helps you create your own working copy of the Kwitykwity DAM Tool in **under 10 minutes**.
+**For experienced users who just need the essentials.**
 
----
-
-## 📋 Prerequisites
-
-- Google Account
-- Google Cloud account (free tier is fine)
-- Chrome or Firefox browser
+⏱️ **Time:** 10 minutes  
+💡 **Skill level:** Comfortable with Google Workspace & APIs
 
 ---
 
-## ⚡ Fast Track Setup (10 Minutes)
+## 🎯 Overview
 
-### Step 1: Create Google Cloud Project (2 minutes)
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Click **"Select a project"** → **"New Project"**
-3. Name it: `DAM Tool`
-4. Click **"Create"**
-
-### Step 2: Enable Vision API & Get API Key (3 minutes)
-
-1. In Google Cloud Console, go to **APIs & Services** → **Library**
-2. Search for **"Cloud Vision API"**
-3. Click **Enable**
-4. Go to **APIs & Services** → **Credentials**
-5. Click **"+ Create Credentials"** → **API Key**
-6. **Copy the API key** (starts with `AIza...`)
-7. Click **"Restrict Key"**:
-   - Under "API restrictions", select **"Cloud Vision API"**
-   - Click **Save**
-
-### Step 3: Create Google Drive Folder (1 minute)
-
-1. Go to [Google Drive](https://drive.google.com)
-2. Click **New** → **Folder**
-3. Name it: `DAM_Assets`
-4. Open the folder
-5. **Copy the folder ID** from URL:
-   ```
-   https://drive.google.com/drive/folders/13kaO35TdPp3X-T0_A0fdBFG3Th8jUJNm
-                                          ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-                                          This is your folder ID
-   ```
-
-### Step 4: Create Google Sheet (1 minute)
-
-1. Go to [Google Sheets](https://sheets.google.com)
-2. Click **Blank** to create new sheet
-3. Name it: `DAM Database`
-
-### Step 5: Add the Code (2 minutes)
-
-1. In your Google Sheet, click **Extensions** → **Apps Script**
-2. Delete the placeholder code
-3. Copy **all the code** from `Code.gs` in this repository
-4. Paste it into the Apps Script editor
-5. **Update lines 17-18** with your credentials:
-   ```javascript
-   VISION_API_KEY: 'AIzaSy_YOUR_ACTUAL_KEY_HERE',
-   DRIVE_FOLDER_ID: 'YOUR_ACTUAL_FOLDER_ID_HERE',
-   ```
-6. Click **Save** (💾 icon or Ctrl+S)
-7. Name the project: `DAM Tool`
-
-### Step 6: Add the HTML (1 minute)
-
-1. In Apps Script, click **+** next to "Files"
-2. Select **HTML**
-3. Name it: `DAMTool`
-4. Copy **all the code** from `DAMTool.html` in this repository
-5. Paste it in
-6. Click **Save**
-
-### Step 7: Deploy the Web App (2 minutes)
-
-1. Click **Deploy** → **New deployment**
-2. Click the **gear icon** ⚙️ → Select **"Web app"**
-3. Fill in:
-   ```
-   Description: DAM Tool v1
-   Execute as: Me (your-email@gmail.com)
-   Who has access: Anyone
-   ```
-4. Click **Deploy**
-5. Click **Authorize access**
-6. Choose your Google account
-7. Click **Advanced** → **Go to DAM Tool (unsafe)** → **Allow**
-8. **Copy the Web App URL** (ends with `/exec`)
-
-### Step 8: Update HTML with Your URL (1 minute)
-
-1. In Apps Script, open `DAMTool.html`
-2. Find line ~257:
-   ```javascript
-   const baseUrl = '';
-   ```
-3. Replace with your Web App URL:
-   ```javascript
-   const baseUrl = 'https://script.google.com/macros/s/AKfycby.../exec';
-   ```
-4. Click **Save**
-
-### Step 9: Test It! (30 seconds)
-
-1. **Add some images** to your `DAM_Assets` folder in Google Drive
-2. **Open your Web App URL** in a new browser tab
-3. You should see the purple interface!
-4. **Click "Sync"** button
-5. Wait for "Synced! Found X assets" message
-
-### Step 10: Tag Your Images (1 minute)
-
-1. Go back to your **Google Sheet**
-2. Click **🎨 DAM Tool** → **🏷️ Tag All Assets**
-3. Wait for completion (1 second per image)
-4. **Refresh your Web App** page
-5. **Search for a tag** (like "glasses", "smile", "purple")
-6. See your thumbnails! 🎉
+Build an AI-powered image search tool using:
+- **Storage:** Google Drive
+- **Database:** Google Sheets  
+- **AI:** Google Cloud Vision API
+- **Backend:** Google Apps Script
+- **Frontend:** HTML/JS
 
 ---
 
-## ✅ You're Done!
+## 📥 1. Download Files (1 min)
 
-Your DAM tool is now running at your Web App URL!
+```bash
+git clone https://github.com/kwitykwity/DAMTool.git
+cd DAMTool
+```
 
-**Bookmark it** for easy access.
+**OR** download ZIP from GitHub
 
----
-
-## 🎨 What You Can Do Now:
-
-- 🔍 **Search** by AI-generated tags
-- 🖼️ **Browse** thumbnails in a beautiful gallery
-- ⬇️ **Download** images by clicking thumbnails
-- 🔄 **Sync** new images from Drive
-- 🏷️ **Auto-tag** all images with AI
+**Files needed:** `Code.gs` and `DAMTool.html`
 
 ---
 
-## 🐛 Troubleshooting
+## 🔑 2. Get Credentials (4 min)
 
-### "Error loading assets"
-- Make sure you clicked "Sync" at least once
-- Check that your Drive folder has images
-- Verify your folder ID is correct
+### Google Cloud Vision API Key
+1. [console.cloud.google.com](https://console.cloud.google.com) → New Project
+2. Enable **Cloud Vision API**
+3. **APIs & Services** → **Credentials** → **Create API Key**
+4. Restrict to Cloud Vision API
+5. Copy key: `AIzaSy...`
 
-### "Sync error"
-- Check your API key is valid
-- Make sure Vision API is enabled
-- Verify API key restrictions allow Vision API
+### Google Drive Folder ID
+1. Create folder in Drive
+2. Upload 3-5 test images
+3. Copy ID from URL: `drive.google.com/drive/folders/FOLDER_ID`
 
-### Thumbnails not showing
-- Make sure images are in supported formats (JPG, PNG, GIF, WEBP, BMP)
-- Check they're in the correct Drive folder
-- Try clicking "Sync" again
-
-### "Failed to fetch"
-- Make sure you're using the `/exec` URL, not the editor URL
-- Redeploy the web app
-- Try incognito/private browsing mode
+### Google Sheet ID
+1. Create new Google Sheet
+2. Copy ID from URL: `docs.google.com/spreadsheets/d/SHEET_ID/edit`
 
 ---
 
-## 💰 Cost
+## 💻 3. Setup Apps Script (3 min)
 
-**Free tier includes:**
-- 1,000 Vision API requests per month (FREE)
-- Google Drive storage (15GB FREE)
-- Google Sheets (FREE)
-- Apps Script (FREE)
+### Add Files
+1. Sheet → **Extensions** → **Apps Script**
+2. Paste `Code.gs` content → Save
+3. **+ Files** → **HTML** → Name: `DAMTool` → Paste `DAMTool.html` content → Save
 
-**After free tier:**
-- Vision API: $1.50 per 1,000 images
-- Drive storage: $1.99/month for 100GB
+### Configure Credentials
+Add to bottom of `Code.gs`:
 
-For personal use with 100-200 images, you'll **stay in the free tier**!
+```javascript
+function setupMyConfig() {
+  PropertiesService.getScriptProperties().setProperties({
+    'VISION_API_KEY': 'YOUR_API_KEY',
+    'DRIVE_FOLDER_ID': 'YOUR_FOLDER_ID',
+    'SPREADSHEET_ID': 'YOUR_SHEET_ID'
+  });
+}
+```
+
+Run it, authorize, then **delete the function**.
+
+Update CONFIG at top of `Code.gs`:
+
+```javascript
+const CONFIG = {
+  VISION_API_KEY: PropertiesService.getScriptProperties().getProperty('VISION_API_KEY'),
+  DRIVE_FOLDER_ID: PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID'),
+  SPREADSHEET_ID: PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'),
+  SHEET_NAME: 'Assets',
+  SUPPORTED_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp']
+};
+```
+
+Save.
+
+---
+
+## 🚀 4. Deploy (2 min)
+
+1. **Deploy** → **New deployment** → **Web app**
+2. Execute as: **Me** | Access: **Anyone**
+3. Copy deployment URL
+4. In `DAMTool.html`, update: `const baseUrl = 'YOUR_DEPLOYMENT_URL';`
+5. **Deploy** → **Manage deployments** → **Edit** → **New version** → **Deploy**
+
+---
+
+## ✅ 5. Test
+
+1. Open deployment URL
+2. Click **Sync**
+3. Sheet → **🎨 DAM Tool** → **Tag All Assets** (wait 30 sec)
+4. Web app → **Sync** → Search → Done!
+
+---
+
+## 🔧 Architecture
+
+```
+Drive (images) → Apps Script (sync) → Sheet (database)
+                      ↓
+                Vision API (tags)
+                      ↓
+                Web Interface (search)
+```
+
+---
+
+## 📁 File Structure
+
+```
+Code.gs          # Backend (Apps Script)
+DAMTool.html     # Frontend (HTML/CSS/JS)
+```
 
 ---
 
 ## 🔒 Security Notes
 
-- Your API key is stored in **your** Apps Script (private to you)
-- Only **you** can access the Google Sheet
-- Web app can be accessed by **Anyone** (but they can't edit your data)
-- To make it private, change "Who has access" to "Only myself"
+- ✅ Credentials in Script Properties (not code)
+- ✅ API key restricted to Vision API
+- ✅ Delete setup function after running
+- ✅ Never commit real credentials to GitHub
 
 ---
 
-## 📚 Next Steps
+## 🐛 Common Issues
 
-- Add more images to your Drive folder
-- Tag them using the menu or Sync button
-- Organize by creating folders for different categories
-- Share your Web App URL with team members
-
----
-
-## 🆘 Need Help?
-
-Open an issue on GitHub with:
-1. What you're trying to do
-2. What error you're seeing
-3. Screenshot of the error (if applicable)
+| Issue | Fix |
+|-------|-----|
+| No assets found | Upload images to Drive, click Sync |
+| Search returns nothing | Run "Tag All Assets" from Sheet menu |
+| Permission denied | Reauthorize: Run any function → Allow |
+| HTML not found | Name file exactly `DAMTool` (no .html) |
+| Invalid response | Update baseUrl in HTML, redeploy |
 
 ---
 
-**Congratulations! You now have your own AI-powered Digital Asset Management system!** 🎉
+## 🎯 Key Functions
+
+```javascript
+syncFromInterface()    // Sync Drive → Sheet
+getAllAssets()         // Get all assets as JSON
+generateAITags(fileId) // Tag single image
+tagAllAssets()         // Tag all untagged images
+```
+
+---
+
+## 🔄 Daily Usage
+
+1. Upload images to Drive folder
+2. Web app → Click **Sync**
+3. Sheet → **Tag All Assets** (if needed)
+4. Search by tags
+5. Click thumbnail to download
+
+---
+
+## 📊 Database Schema
+
+| Column | Content |
+|--------|---------|
+| A | File ID |
+| B | File Name |
+| C | File URL |
+| D | Created Date |
+| E | File Size |
+| F | MIME Type |
+| G | AI Tags |
+| H | Last Updated |
+
+---
+
+## 🎨 Customization
+
+### Change Colors
+Edit CSS variables in `DAMTool.html`:
+```css
+:root {
+  --accent1: #b36cff;  /* Primary purple */
+  --accent2: #5bbcff;  /* Secondary blue */
+  --blue: #4a90e2;     /* Thumbnail border */
+}
+```
+
+### Add More File Types
+Update in `Code.gs`:
+```javascript
+SUPPORTED_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/svg+xml']
+```
+
+### Adjust AI Sensitivity
+In `generateAITags()`:
+```javascript
+{ type: 'LABEL_DETECTION', maxResults: 10 }  // Change 10 to desired number
+```
+
+---
+
+## 🚀 Advanced Usage
+
+### Batch Tagging with Rate Limiting
+```javascript
+function tagAllAssets() {
+  // ... existing code ...
+  Utilities.sleep(1000);  // Adjust delay (milliseconds)
+}
+```
+
+### Custom Tag Filtering
+```javascript
+// In generateAITags(), filter low-confidence tags:
+const tagList = labels
+  .filter(label => label.score > 0.8)  // Only 80%+ confidence
+  .map(label => label.description);
+```
+
+### Auto-Sync Trigger
+```javascript
+function createTrigger() {
+  ScriptApp.newTrigger('syncFromInterface')
+    .timeBased()
+    .everyHours(1)
+    .create();
+}
+```
+
+---
+
+## 📚 API Reference
+
+### Vision API Response
+```javascript
+{
+  labelAnnotations: [
+    { description: "Person", score: 0.95 },
+    { description: "Smile", score: 0.88 }
+  ],
+  imagePropertiesAnnotation: {
+    dominantColors: { colors: [...] }
+  }
+}
+```
+
+### Sync Response
+```javascript
+{ success: true, count: 25 }
+// OR
+{ success: false, error: "Error message" }
+```
+
+---
+
+## 🔗 Links
+
+- 📖 [Full Deployment Guide](DEPLOYMENT_GUIDE.md)
+- ✅ [Deployment Checklist](DEPLOYMENT_CHECKLIST.md)
+- 🐛 [Report Issues](https://github.com/kwitykwity/DAMTool/issues)
+- ⭐ [Star on GitHub](https://github.com/kwitykwity/DAMTool)
+
+---
+
+## 💡 Pro Tips
+
+**Performance:**
+- Keep Drive folder under 1000 images
+- Run cleanup regularly (🗑️ Clean Deleted Files)
+- Batch tag during off-hours
+
+**Organization:**
+- Use descriptive folder names
+- Organize by project/client
+- Archive old assets
+
+**Security:**
+- Rotate API keys every 90 days
+- Review Script Properties periodically
+- Monitor API usage in Cloud Console
+
+**Workflow:**
+- Bookmark deployment URL
+- Create desktop shortcut
+- Integrate with existing DAM tools
+
+---
+
+## 🆘 Need More Help?
+
+📖 **Detailed guide:** See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)  
+✅ **Step-by-step:** See [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)  
+💬 **Questions?** Open a [GitHub Issue](https://github.com/kwitykwity/DAMTool/issues)
+
+---
+
+<div align="center">
+
+**Built with 💜 by Kwitykwity**
+
+⚡ **You're ready to go!** ⚡
+
+</div>
